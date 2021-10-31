@@ -1,14 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+
+import Login from './views/Login'
 
 export default function App() {
+  // const tasks = async () => {
+  //   const response = await getTasks(db)
+  //   console.log({ response })
+  // }
+
+  // useEffect(() => {
+  //   tasks()
+  // }, [])
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <SafeAreaProvider>
+      <Login />
+    </SafeAreaProvider>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -18,4 +28,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+})
