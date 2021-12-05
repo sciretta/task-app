@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button, Header, Icon, Input } from 'react-native-elements'
+import Auth from '../firebase/Auth'
 
 export default function LogIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleLogin = () => {}
+  const handleLogin = async () => {
+    const response = await Auth.logIn(email, password)
+    console.log({ response })
+  }
 
   return (
     <View style={styles.container}>
