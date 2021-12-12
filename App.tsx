@@ -6,20 +6,12 @@ import Login from './views/LogIn'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import Home from './views/Home'
-import auth from './firebase/Auth'
+import { useUser } from './firebase/hooks'
 
 const Stack = createStackNavigator()
 
 export default function App() {
-  const [user, setUser] = useState(null)
-  useEffect(() => {
-    const unsuscribe = auth.onAuthStateChanged((user) => {
-      setUser(user)
-    })
-
-    return unsuscribe
-  }, [])
-
+  const user = useUser()
   return (
     <SafeAreaProvider>
       <Header

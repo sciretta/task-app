@@ -1,8 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { Input } from 'react-native-elements'
+import { Button, Icon, Input } from 'react-native-elements'
 import { Overlay } from 'react-native-elements/dist/overlay/Overlay'
-import { TextInput } from 'react-native-gesture-handler'
 
 export default function AddTaskModal({
   open,
@@ -22,6 +21,10 @@ export default function AddTaskModal({
     >
       <View style={styles.content}>
         <Input placeholder="New task" />
+        <Button
+          icon={<Icon name="add" size={15} color="white" />}
+          title="Add task"
+        />
       </View>
     </Overlay>
   )

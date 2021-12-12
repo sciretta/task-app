@@ -1,12 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { SpeedDial } from 'react-native-elements'
 import AddTaskModal from '../components/AddTaskModal'
 import auth from '../firebase/Auth'
+import { taskActions } from '../firebase/db'
+import { useUser } from '../firebase/hooks'
 
 export default function Home() {
   const [addTask, setAddTask] = useState(false)
   const [openSpeedDial, setOpenSpeedDial] = useState(false)
+  const [tasks, setTasks] = useState<{ name: string }[]>()
+  const user = useUser()
+
+  useEffect(() => {
+    ;(async () => {
+      if (!user?.uid) return
+      const response = await taskActions.getTasks(user.uid)
+      setTasks(response as { name: string }[])
+    })()
+  }, [user])
+
+  console.log({ tasks })
 
   const handleSpeedDial = () => {
     setOpenSpeedDial((prev) => !prev)
