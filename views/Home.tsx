@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { SpeedDial } from 'react-native-elements'
+import { Card, SpeedDial } from 'react-native-elements'
 import AddTaskModal from '../components/AddTaskModal'
 import auth from '../firebase/Auth'
 import { taskActions } from '../firebase/db'
@@ -13,11 +13,16 @@ export default function Home() {
   const user = useUser()
 
   useEffect(() => {
+    let unsubscribe: any
     ;(async () => {
       if (!user?.uid) return
-      const response = await taskActions.getTasks(user.uid)
-      setTasks(response as { name: string }[])
+      unsubscribe = await taskActions.subscribeTasksCollection(
+        user.uid,
+        setTasks
+      )
     })()
+
+    return unsubscribe
   }, [user])
 
   console.log({ tasks })
@@ -29,6 +34,12 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <AddTaskModal open={addTask} setOpen={setAddTask} />
+      {tasks &&
+        tasks.map((task) => (
+          <Card>
+            <Card.Title>{task.name}</Card.Title>
+          </Card>
+        ))}
       <SpeedDial
         isOpen={openSpeedDial}
         icon={{ name: 'edit', color: '#fff' }}

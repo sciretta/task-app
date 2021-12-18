@@ -1,29 +1,53 @@
 import {
   getFirestore,
   collection,
-  getDocs,
   query,
   where,
+  addDoc,
+  onSnapshot,
 } from 'firebase/firestore'
 import app from './config'
+
+enum Collection {
+  TASKS = 'tasks',
+}
 
 class TaskActions {
   private db = getFirestore(app)
 
-  public async getTasks(uid: string) {
-    const q = query(collection(this.db, 'cities'), where('uid', '==', uid))
-    const taskSnapshot = await getDocs(q)
+  // public async getTasks(uid: string) {
+  //   const q = query(
+  //     collection(this.db, Collection.TASKS),
+  //     where('uid', '==', uid)
+  //   )
+  //   const taskSnapshot = await getDocs(q)
 
-    // querySnapshot.forEach((doc) => {
-    //   // doc.data() is never undefined for query doc snapshots
-    //   console.log(doc.id, " => ", doc.data());
-    // });
+  //   const tasksList = taskSnapshot.docs.map((doc) => doc.data())
+  //   return tasksList
+  // }
 
-    // const tasksCol = collection(this.db, 'tasks')
-    // console.log({ tasksCol })
-    // const taskSnapshot = await getDocs(tasksCol)
-    const tasksList = taskSnapshot.docs.map((doc) => doc.data())
-    return tasksList
+  public async addTask(uid: string, name: string) {
+    await addDoc(collection(this.db, Collection.TASKS), {
+      uid,
+      name,
+    })
+  }
+
+  public async subscribeTasksCollection(uid: string, cb: (tasks: any) => void) {
+    const q = query(
+      collection(this.db, Collection.TASKS),
+      where('uid', '==', uid)
+    )
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const tasks: any = []
+      querySnapshot.forEach((doc) => {
+        tasks.push(doc.data())
+      })
+      cb(tasks)
+    })
+
+    return unsubscribe
   }
 }
 
