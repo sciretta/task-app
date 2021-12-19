@@ -5,6 +5,8 @@ import {
   where,
   addDoc,
   onSnapshot,
+  deleteDoc,
+  doc,
 } from 'firebase/firestore'
 import app from './config'
 
@@ -42,12 +44,16 @@ class TaskActions {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const tasks: any = []
       querySnapshot.forEach((doc) => {
-        tasks.push(doc.data())
+        tasks.push({ ...doc.data(), id: doc.id })
       })
       cb(tasks)
     })
 
     return unsubscribe
+  }
+
+  public async deleteTask(id: string) {
+    await deleteDoc(doc(this.db, Collection.TASKS, id))
   }
 }
 

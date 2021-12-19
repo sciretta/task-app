@@ -13,6 +13,7 @@ export default function AddTaskModal({
   setOpen: Function
 }) {
   const user = useUser()
+  const [loading, setLoading] = useState(false)
   const toggleOverlay = () => {
     setOpen((prev: boolean) => !prev)
   }
@@ -21,11 +22,14 @@ export default function AddTaskModal({
   useEffect(() => {
     if (!open) return
     setTask('')
+    setLoading(false)
   }, [open])
 
-  const onAddTask = () => {
+  const onAddTask = async () => {
     if (!task || !user?.uid) return
-    taskActions.addTask(user.uid, task)
+    setLoading(true)
+    await taskActions.addTask(user.uid, task)
+    setOpen(false)
   }
 
   return (
@@ -37,6 +41,7 @@ export default function AddTaskModal({
       <View style={styles.content}>
         <Input placeholder="New task" onChangeText={setTask} />
         <Button
+          loading={loading}
           onPress={onAddTask}
           icon={<Icon name="add" size={15} color="white" />}
           title="Add task"
