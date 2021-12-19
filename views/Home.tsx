@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { SpeedDial } from 'react-native-elements'
 import AddTaskModal from '../components/AddTaskModal'
 import TaskCard from '../components/TaskCard'
@@ -7,7 +7,7 @@ import auth from '../firebase/Auth'
 import { taskActions } from '../firebase/db'
 import { useUser } from '../firebase/hooks'
 
-export default function Home() {
+export default function Home({ navigation }: { navigation: any }) {
   const [addTask, setAddTask] = useState(false)
   const [openSpeedDial, setOpenSpeedDial] = useState(false)
   const [tasks, setTasks] = useState<{ name: string; id: string }[]>()
@@ -44,17 +44,22 @@ export default function Home() {
         onClose={() => handleSpeedDial()}
       >
         <SpeedDial.Action
+          icon={{ name: 'exit-to-app', color: '#fff' }}
+          title="Logout"
+          onPress={() => auth.logOut()}
+        />
+        <SpeedDial.Action
+          icon={{ name: 'person', color: '#fff' }}
+          title="Profile"
+          onPress={() => navigation.navigate('Profile')}
+        />
+        <SpeedDial.Action
           icon={{ name: 'add', color: '#fff' }}
           title="Add task"
           onPress={() => {
             setAddTask(true)
             handleSpeedDial()
           }}
-        />
-        <SpeedDial.Action
-          icon={{ name: 'exit-to-app', color: '#fff' }}
-          title="Logout"
-          onPress={() => auth.logOut()}
         />
       </SpeedDial>
     </View>

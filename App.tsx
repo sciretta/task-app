@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import Home from './views/Home'
 import { useUser } from './firebase/hooks'
+import Profile from './views/Profile'
 
 const Stack = createStackNavigator()
 
@@ -22,8 +23,17 @@ export default function App() {
         <Login />
       ) : (
         <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Home" component={Home} />
+          <Stack.Navigator>
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="Home"
+              component={Home}
+            />
+            <Stack.Screen
+              options={{ headerTitle: '', headerTransparent: true }}
+              name="Profile"
+              component={Profile}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       )}
