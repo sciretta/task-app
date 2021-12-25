@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import Home from './views/Home'
 import { useUser } from './firebase/hooks'
 import Profile from './views/Profile'
+import Camera from './views/Camera'
 
 const Stack = createStackNavigator()
 
@@ -33,6 +34,11 @@ export default function App() {
               options={{ headerTitle: '', headerTransparent: true }}
               name="Profile"
               component={Profile}
+            />
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="Camera"
+              component={Camera}
             />
           </Stack.Navigator>
         </NavigationContainer>

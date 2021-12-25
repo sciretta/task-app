@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements'
 import { Overlay } from 'react-native-elements/dist/overlay/Overlay'
 import { taskActions } from '../firebase/db'
