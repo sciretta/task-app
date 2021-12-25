@@ -8,6 +8,7 @@ import {
   deleteDoc,
   doc,
   setDoc,
+  getDoc,
 } from 'firebase/firestore'
 import {
   getDownloadURL,
@@ -61,6 +62,13 @@ class TaskActions {
     })
   }
 
+  public async getAvatar(uid: string) {
+    const docRef = doc(this.db, Collection.AVATARS, uid)
+    const docSnap = await getDoc(docRef)
+
+    return docSnap.data()?.fileUrl as string
+  }
+
   public async saveImage(
     uid: string,
     image: string,
@@ -77,18 +85,27 @@ class TaskActions {
 
     const taskProgress = (snapshot: any) => {
       if (!transferedCb) return
-      transferedCb(snapshot.bytesTransferred.toString())
+      transferedCb(
+        ((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+          .toFixed(0)
+          .toString() + '%'
+      )
     }
 
     const taskCompleted = () => {
       getDownloadURL(storageRef).then((url) => {
         if (!url) return
+        console.log({ url })
         this.uploadAvatar(uid, url)
+        if (!transferedCb) return
+        transferedCb('')
       })
     }
 
     const taskError = (snapshot: any) => {
       console.log(snapshot)
+      if (!transferedCb) return
+      transferedCb('')
     }
 
     uploadTask.on('state_changed', taskProgress, taskError, taskCompleted)
